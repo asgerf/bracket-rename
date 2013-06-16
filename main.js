@@ -20,10 +20,10 @@ define(function (require, exports, module) {
         var editor = EditorManager.getFocusedEditor()
         if (editor === null)
             return
-            
+        
         var text = editor.document.getText()
         var pos = editor.indexFromPos(editor.getCursorPos())
-            
+        
         var jsb = new JavaScriptBuffer;
         jsb.add("main", text)
         var questions = jsb.renameTokenAt("main", pos) // TODO: run in parallel with modal bar
@@ -31,18 +31,9 @@ define(function (require, exports, module) {
             return
         
         var initialRange = questions[0][0];
-//        initialRangeLoop:
-//        for (var i=0; i<questions.length; i++) {
-//            for (var j=0; j<questions[i].length; j++) {
-//                var range = questions[i][j];
-//                if (range.start.offset <= pos && pos <= range.end.offset) {
-//                    initialRange = range;
-//                    break initialRangeLoop;
-//                }
-//            }
-//        }
-        var oldName = text.substring(initialRange.start.offset, initialRange.end.offset) // todo: nicer way to get old name
+        var oldName = text.substring(initialRange.start.offset, initialRange.end.offset)
         
+        editor.setSelection(convertPos(initialRange.start), convertPos(initialRange.end))
         var nameBar = new ModalBar('New name: <input type="text" style="width: 10em" value="'+oldName+'"/>', true); // true=auto-close
         
         var selected = {} // indices of selected renamings
@@ -68,12 +59,12 @@ define(function (require, exports, module) {
                 var confirmBar = new ModalBar('Rename this token? ' +
                                               '<button id="rename-yes" class="btn">Yes</button> ' +
                                               '<button id="rename-no" class="btn">No</button> ' +
-                                              '<span style="margin-left: 3em">&nbsp;</span> ' +
-                                              '<button id="rename-yes-all" class="btn">Yes to Rest</button> ' +
-                                              '<button id="rename-no-all" class="btn">No to Rest</button> ' +
-                                              '<span style="margin-left: 3em">&nbsp;</span> ' +
-                                              '<button class="btn">Abort</button><br/>'+
-                                              (i+1) + ' / ' + questions.length, 
+                                              '<button class="btn">Abort</button>' +
+                                              '<div style="float: right; color:gray">' +
+                                                'Question ' + (i+1) + ' / ' + questions.length + ' ' +
+                                                '<button id="rename-yes-all" class="btn">Yes to Rest</button> ' +
+                                                '<button id="rename-no-all" class="btn">No to Rest</button> ' +
+                                              '</div>', 
                                               true) // true=auto-close
                 confirmBar.getRoot().on("click", "button", function(e) {
                     confirmBar.close()
