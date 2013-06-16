@@ -1,0 +1,3 @@
+[submodule "light-refactor.js"]
+	path = light-refactor.js
+	url = git://github.com/asgerf/light-refactor.js.git
