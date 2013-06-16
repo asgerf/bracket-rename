@@ -163,5 +163,10 @@ define(function (require, exports, module) {
     
     var editMenu = Menus.getMenu(Menus.AppMenuBar.EDIT_MENU);
     
-    editMenu.addMenuItem("javascript.renameIdentifier", "Ctrl-R", Menus.LAST_IN_SECTION, Menus.MenuSection.EDIT_REPLACE_COMMANDS);
+    var keys = [
+        {key: "Ctrl-R", platform:"mac"}, // don't translate to Cmd-R on mac
+        {key: "Ctrl-R", platform:"win"}
+    ];
+    
+    editMenu.addMenuItem("javascript.renameIdentifier", keys, Menus.LAST_IN_SECTION, Menus.MenuSection.EDIT_REPLACE_COMMANDS);
 });
