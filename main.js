@@ -1,4 +1,4 @@
-/*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50 */
+/*jslint asi: true, vars: true, plusplus: true, devel: true, nomen: true,  maxerr: 50 */
 /*global define, $, brackets */
 
 define(function (require, exports, module) {
@@ -120,7 +120,7 @@ define(function (require, exports, module) {
                     ranges.push(range)
                     
                     // check if this renaming pushes the zoom offset
-                    if (range.start.line == initialRange.start.line && range.start.column < initialRange.start.column) {
+                    if (range.start.line === initialRange.start.line && range.start.column < initialRange.start.column) {
                         zoomCol += newName.length - oldNameLength;
                     }
                 }
