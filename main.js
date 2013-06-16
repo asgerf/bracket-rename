@@ -25,7 +25,7 @@ define(function (require, exports, module) {
         
         var jsb = new JavaScriptBuffer;
         jsb.add("main", text)
-        var questions = jsb.renameTokenAt("main", pos) // TODO: run in parallel with modal bar
+        var questions = jsb.renameTokenAt("main", pos) // TODO: run in background?
         if (!questions)
             return
         
