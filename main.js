@@ -2,8 +2,6 @@
 /*global define, $, brackets */
 
 define(function (require, exports, module) {
-    "use strict";
-    
     var CommandManager  = brackets.getModule("command/CommandManager"),
         Menus           = brackets.getModule("command/Menus"),
         EditorManager   = brackets.getModule("editor/EditorManager");
@@ -20,6 +18,7 @@ define(function (require, exports, module) {
         var editor = EditorManager.getFocusedEditor()
         if (editor === null)
             return
+        var cm = editor._codeMirror
         
         var text = editor.document.getText()
         var pos = editor.indexFromPos(editor.getCursorPos())
@@ -33,7 +32,30 @@ define(function (require, exports, module) {
         var initialRange = questions[0][0];
         var oldName = text.substring(initialRange.start.offset, initialRange.end.offset)
         
-        editor.setSelection(convertPos(initialRange.start), convertPos(initialRange.end))
+        // We need to highlight groups of tokens. We use an array to keep track of the text markers we've inserted.
+        var markers = []
+        function setHighlighting(ranges) {
+            cm.operation(function() {
+                markers.forEach(function(x) { x.clear() }) // remove any existing markers
+                markers.length = 0
+                $(cm.getWrapperElement()).addClass("find-highlighting");
+                for (var j=0; j<ranges.length; j++) {
+                    var range = ranges[j]
+                    var marker = editor._codeMirror.markText(convertPos(range.start), convertPos(range.end), {className:"CodeMirror-searching"})
+                    markers.push(marker)
+                }
+            })
+        }
+        function clearHighlighting() {
+            $(cm.getWrapperElement()).removeClass("find-highlighting");
+            cm.operation(function() {
+                markers.forEach(function(x) { x.clear() })
+                markers.length = 0
+            })
+        }
+        
+        // Highlight token related to the selected token while asking for the new name
+        setHighlighting(questions[0])
         var nameBar = new ModalBar('New name: <input type="text" style="width: 10em" value="'+oldName+'"/>', true); // true=auto-close
         
         var selected = {0:true} // indices of selected renamings (auto-answer first question)
@@ -45,15 +67,16 @@ define(function (require, exports, module) {
             nameBar = null
             askQuestion(1)
         })
+        $(nameBar).on("closeCancel", cancelRenaming)
+        $(nameBar).on("closeBlur", cancelRenaming)
         
         function askQuestion(i) {
             if (i === questions.length) {
                 finishRenaming()
             } else {
                 var token = questions[i][0]
-                // todo: better highlighting
-                // todo: highlight all tokens in group
-                editor.setSelection(convertPos(token.start), convertPos(token.end), true) // true=center viewport on selection
+                editor.setSelection(convertPos(token.start), convertPos(token.start), true) // true=center viewport on selection
+                setHighlighting(questions[i])
                 var confirmBar = new ModalBar('Rename this token? ' +
                                               '<button id="rename-yes" class="btn">Yes</button> ' +
                                               '<button id="rename-no" class="btn">No</button> ' +
@@ -85,13 +108,21 @@ define(function (require, exports, module) {
                             finishRenaming();
                             break;
                         default:
-                            break; // stop button - do nothing
+                            cancelRenaming();
+                            break;
                     }
                 })
+                $(confirmBar).on("closeBlur", cancelRenaming);
+                $(confirmBar).on("closeCancel", cancelRenaming);
             }
         }
         
+        function cancelRenaming() {
+            clearHighlighting();
+        }
+        
         function finishRenaming() {
+            clearHighlighting();
             // After renaming, zoom back to original position. We need to keep track of the exact
             // column offset in case it changes due to renaming
             var zoomCol = initialRange.start.column;
