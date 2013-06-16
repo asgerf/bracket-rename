@@ -16,7 +16,7 @@ define(function (require, exports, module) {
         return {line: pos.line-1, ch: pos.column}
     }
     
-    CommandManager.register("Show Message", "showMessage", function () {
+    CommandManager.register("Rename JavaScript Identifier", "javascript.renameIdentifier", function () {
         var editor = EditorManager.getFocusedEditor()
         if (editor === null)
             return
@@ -30,17 +30,17 @@ define(function (require, exports, module) {
         if (!questions)
             return
         
-        var initialRange;
-        initialRangeLoop:
-        for (var i=0; i<questions.length; i++) {
-            for (var j=0; j<questions[i].length; j++) {
-                var range = questions[i][j];
-                if (range.start.offset <= pos && pos <= range.end.offset) {
-                    initialRange = range;
-                    break initialRangeLoop;
-                }
-            }
-        }
+        var initialRange = questions[0][0];
+//        initialRangeLoop:
+//        for (var i=0; i<questions.length; i++) {
+//            for (var j=0; j<questions[i].length; j++) {
+//                var range = questions[i][j];
+//                if (range.start.offset <= pos && pos <= range.end.offset) {
+//                    initialRange = range;
+//                    break initialRangeLoop;
+//                }
+//            }
+//        }
         var oldName = text.substring(initialRange.start.offset, initialRange.end.offset) // todo: nicer way to get old name
         
         var nameBar = new ModalBar('New name: <input type="text" style="width: 10em" value="'+oldName+'"/>', true); // true=auto-close
@@ -143,5 +143,5 @@ define(function (require, exports, module) {
     
     var editMenu = Menus.getMenu(Menus.AppMenuBar.EDIT_MENU);
     
-    editMenu.addMenuItem("showMessage", null, Menus.FIRST);
+    editMenu.addMenuItem("javascript.renameIdentifier", "Ctrl-R", Menus.LAST_IN_SECTION, Menus.MenuSection.EDIT_REPLACE_COMMANDS);
 });
