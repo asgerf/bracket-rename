@@ -36,16 +36,14 @@ define(function (require, exports, module) {
         editor.setSelection(convertPos(initialRange.start), convertPos(initialRange.end))
         var nameBar = new ModalBar('New name: <input type="text" style="width: 10em" value="'+oldName+'"/>', true); // true=auto-close
         
-        var selected = {} // indices of selected renamings
-        
-        // todo: auto-answer question with initial token
+        var selected = {0:true} // indices of selected renamings (auto-answer first question)
         
         var newName;
         
         $(nameBar).on("closeOk", function() {
             newName = $("input[type='text']", nameBar.getRoot()).val()
             nameBar = null
-            askQuestion(0)
+            askQuestion(1)
         })
         
         function askQuestion(i) {
@@ -61,7 +59,7 @@ define(function (require, exports, module) {
                                               '<button id="rename-no" class="btn">No</button> ' +
                                               '<button class="btn">Abort</button>' +
                                               '<div style="float: right; color:gray">' +
-                                                'Question ' + (i+1) + ' / ' + questions.length + ' ' +
+                                                'Question ' + (i+1-1) + ' / ' + (questions.length-1) + ' ' +
                                                 '<button id="rename-yes-all" class="btn">Yes to Rest</button> ' +
                                                 '<button id="rename-no-all" class="btn">No to Rest</button> ' +
                                               '</div>', 
