@@ -1,8 +1,7 @@
 {
     "name": "asgerf.bracket-rename",
     "title": "Rename JavaScript Identifier",
-    "description": "Semi-automatic renaming of JavaScript variables and property names guideded by static analysis.",
-    "author": "Asger Feldthaus (asger.feldthaus@gmail.com)",
+    "author": "Asger Feldthaus <asf@cs.au.dk>",
     "keywords": "refactoring",
     "version": "0.1.0"
 }
