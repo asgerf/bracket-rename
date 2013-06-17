@@ -1,6 +1,10 @@
 bracket-rename
 ==============
 
-Rename refactoring for bracket
+Rename JavaScript Identifier for [Brackets](http://brackets.io/).
 
-Status: Working prototype. But not really recommended for production use yet.
+### Usage
+Place the cursor on a JavaScript identifier and press *Ctrl-R* to rename it.
+
+### Status
+Working prototype.
