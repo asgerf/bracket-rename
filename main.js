@@ -6,7 +6,7 @@ define(function (require, exports, module) {
         Menus           = brackets.getModule("command/Menus"),
         EditorManager   = brackets.getModule("editor/EditorManager");
     
-    var JavaScriptBuffer = require('light-refactor.js/type-inference');
+    var JavaScriptBuffer = require('lib/light-refactor.js/type-inference');
     
     var ModalBar = brackets.getModule('widgets/ModalBar').ModalBar;
     
