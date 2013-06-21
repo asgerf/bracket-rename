@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Bracket-rename by asgerf</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Bracket-rename</h1>
+          <h2>Rename refactoring for bracket</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/asgerf/bracket-rename/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/asgerf/bracket-rename/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/asgerf/bracket-rename" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h3>
+<a name="refactoring-tools-for-javascript" class="anchor" href="#refactoring-tools-for-javascript"><span class="octicon octicon-link"></span></a>Refactoring Tools for JavaScript</h3>
+
+<p>A splendid programmer such as yourself obviously never makes mistakes and never regrets past decisions. No? Oh, well. Wouldn't it be nice if you could go back in time and fix your mistakes, though?</p>
+
+<p>With the proper refactoring tools, you can.</p>
+
+<p>One particularly common mistake is to choose a bad name for a variable or property.</p>
+
+<h3>
+<a name="renaming-javascript-identifiers" class="anchor" href="#renaming-javascript-identifiers"><span class="octicon octicon-link"></span></a>Renaming JavaScript Identifiers</h3>
+
+<p>Local variables are easy to rename automatically, and many editors support this. But property names are more tricky. Consider the following code:</p>
+
+<div class="highlight"><pre><span class="kd">function</span> <span class="nx">StringBuilder</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">array</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="p">}</span>
+<span class="nx">StringBuilder</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">append</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">array</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="nx">StringBuilder</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">clear</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">array</span><span class="p">.</span><span class="nx">length</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="p">}</span>
+<span class="nx">StringBuilder</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">array</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">BinaryHeap</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">array</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="p">}</span>
+<span class="nx">BinaryHeap</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">insert</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">array</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="nx">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">array</span><span class="p">[(</span><span class="nx">i</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">].</span><span class="nx">key</span> <span class="o">&gt;</span> <span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">array</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">array</span><span class="p">[(</span><span class="nx">i</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">]</span>
+        <span class="nx">i</span> <span class="o">=</span> <span class="p">(</span><span class="nx">i</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+    <span class="p">}</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">array</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="nx">key</span><span class="o">:</span><span class="nx">key</span><span class="p">,</span> <span class="nx">value</span><span class="o">:</span><span class="nx">value</span><span class="p">}</span>
+<span class="p">}</span>
+<span class="cm">/* ... */</span>
+</pre></div>
+
+<p>Now suppose you want to rename the <code>array</code> property of your <code>StringBuilder</code> to something else. How does your favourite editor help you do this?</p>
+
+<h4>
+<a name="the-bulldozer-approach" class="anchor" href="#the-bulldozer-approach"><span class="octicon octicon-link"></span></a>The Bulldozer Approach</h4>
+
+<p>Replace <em>all</em> occurrences of the <code>array</code> property name.</p>
+
+<p>Unfortunately, this forces you to rename <code>array</code> in <code>BinaryHeap</code> as well.</p>
+
+<h4>
+<a name="the-old-school-approach" class="anchor" href="#the-old-school-approach"><span class="octicon octicon-link"></span></a>The Old-School Approach</h4>
+
+<p>Use find/replace tools and decide manually for every occurrence of <code>array</code> if it should be replaced. </p>
+
+<p>Unfortunately, this takes away your precious programming time.</p>
+
+<h4>
+<a name="semi-automatic-renaming" class="anchor" href="#semi-automatic-renaming"><span class="octicon octicon-link"></span></a>Semi-Automatic Renaming</h4>
+
+<p>The bracket-rename extension walks a middle ground between the old-school and the bulldozer. It uses a static analyzer to figure out which tokens obviously refer to the same property. It still requires some feedback from the programmer like the old-school approach, but it answers the obvious questions for you.</p>
+
+<p>In the example above, bracket-rename will figure out that the four <code>array</code> tokens in the <code>StringBuilder</code> class are related, and those in the <code>BinaryHeap</code> class are related. Thus, you only have to tell it once that the array tokens in <code>BinaryHeap</code> should not be renamed.</p>
+
+<h3>
+<a name="how-do-i-try-it" class="anchor" href="#how-do-i-try-it"><span class="octicon octicon-link"></span></a>How Do I Try It?</h3>
+
+<p>Install <a href="http://brackets.io">Brackets</a> and then use the extension manager to install it using the <a href="https://github.com/asgerf/bracket-rename">GitHub URL</a>.</p>
+
+<h3>
+<a name="research" class="anchor" href="#research"><span class="octicon octicon-link"></span></a>Research</h3>
+
+<p>Making refactoring tools for JavaScript is part of my Ph.D research in the <a href="http://cs.au.dk/research/research-areas/programming-languages/">Programming Languages Group</a> at Aarhus University. We are currently exploring others types of refactorings, and ways to make the static analyzer smarter.</p>
+        </section>
+
+        <footer>
+          Bracket-rename is maintained by <a href="https://github.com/asgerf">asgerf</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
