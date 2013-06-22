@@ -1,6 +1,7 @@
 ---
 layout: slate
 title: LightRefactor for Brackets
+repository_url: https://github.com/asgerf/bracket-rename
 ---
 
 ### Refactoring Tools for JavaScript
