@@ -2,6 +2,6 @@
     "name": "asgerf.bracket-rename",
     "title": "Rename JavaScript Identifier",
     "author": "Asger Feldthaus <asf@cs.au.dk>",
-    "description": "Lets you rename any JavaScript identifier. Place the cursor on an identifier and press Ctrl-R. For property names, this works a bit like search-and-replace but asks fewer questions by guessing some answers using static analysis",
-    "version": "0.1.1"
+    "description": "Lets you rename any JavaScript identifier. Place the cursor on an identifier and press Ctrl-R.",
+    "version": "0.2.0"
 }
