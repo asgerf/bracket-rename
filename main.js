@@ -4,14 +4,15 @@
 define(function (require, exports, module) {
     var CommandManager  = brackets.getModule("command/CommandManager"),
         Menus           = brackets.getModule("command/Menus"),
-        EditorManager   = brackets.getModule("editor/EditorManager");
+        EditorManager   = brackets.getModule("editor/EditorManager"),
+        FileUtils       = brackets.getModule("file/FileUtils");
     
     var JavaScriptBuffer = require('light-refactor.js/type-inference');
     
     var ModalBar = brackets.getModule('widgets/ModalBar').ModalBar;
     
     function convertPos(pos) {
-        return {line: pos.line-1, ch: pos.column}
+        return {line: pos.line, ch: pos.column}
     }
     
     CommandManager.register("Rename JavaScript Identifier", "javascript.renameIdentifier", function () {
@@ -23,8 +24,11 @@ define(function (require, exports, module) {
         var text = editor.document.getText()
         var pos = editor.indexFromPos(editor.getCursorPos())
         
+        var filename = editor.document.file ? editor.document.file.name : "";
+        var isHtml = FileUtils.isStaticHtmlFileExt(filename)
+        
         var jsb = new JavaScriptBuffer;
-        jsb.add("main", text)
+        jsb.add("main", text, {type: isHtml ? "html" : "js"})
         var questions = jsb.renameTokenAt("main", pos) // TODO: run in background?
         if (!questions)
             return
@@ -155,7 +159,7 @@ define(function (require, exports, module) {
                     editor.document.replaceRange(newName, convertPos(range.start), convertPos(range.end))
                 })
                 // zoom back to original token and select it
-                editor.setSelection({line:zoomLine-1, ch:zoomCol}, {line:zoomLine-1, ch:zoomCol+newName.length}, zoomScreen)
+                editor.setSelection({line:zoomLine, ch:zoomCol}, {line:zoomLine, ch:zoomCol+newName.length}, zoomScreen)
             })
         }
         
