@@ -17,6 +17,9 @@ Working prototype.
 
 # Change Log
 
+#### 0.2.1 July 7, 2013
+- More conservative treatment of arrays. (Removed @prty-of rule)
+
 #### 0.2.0 June 23, 2013
 - Support for HTML files
 
