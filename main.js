@@ -7,7 +7,7 @@ define(function (require, exports, module) {
         EditorManager   = brackets.getModule("editor/EditorManager"),
         FileUtils       = brackets.getModule("file/FileUtils");
     
-    var JavaScriptBuffer = require('lib/light-refactor.js/type-inference');
+    var JavaScriptBuffer = require('./light-refactor.js/type-inference');
     
     var ModalBar = brackets.getModule('widgets/ModalBar').ModalBar;
     
@@ -60,39 +60,52 @@ define(function (require, exports, module) {
         
         // Highlight token related to the selected token while asking for the new name
         setHighlighting(questions[0])
-        var nameBar = new ModalBar('New name: <input type="text" style="width: 10em" value="'+oldName+'"/>', true); // true=auto-close
+        // ModalBar args: html, autoclose, animate
+        var nameBar = new ModalBar('New name: <input type="text" style="width: 10em" value="'+oldName+'"/>', true, false); 
         
         var selected = {0:true} // indices of selected renamings (auto-answer first question)
         
         var newName;
+        var confirmBar = null;
         
-        $(nameBar).on("closeOk", function() {
+        function handleCommit() {
             newName = $("input[type='text']", nameBar.getRoot()).val()
             nameBar = null
             askQuestion(1)
-        })
-        $(nameBar).on("closeCancel", cancelRenaming)
-        $(nameBar).on("closeBlur", cancelRenaming)
+        }
+        
+        // sprint 32
+        $(nameBar).on("commit", handleCommit)
+        $(nameBar).on("close", clearHighlighting)
+        
+        // before sprint 32
+        $(nameBar).on("closeOk", handleCommit)
+        $(nameBar).on("closeBlur", clearHighlighting)
         
         function askQuestion(i) {
             if (i === questions.length) {
                 finishRenaming()
             } else {
+                if (confirmBar === null) {
+                    confirmBar = new ModalBar(
+                          'Rename this token? ' +
+                          '<button id="rename-yes" class="btn">Yes</button> ' +
+                          '<button id="rename-no" class="btn">No</button> ' +
+                          '<button class="btn">Abort</button>' +
+                          '<div style="float: right; color:gray">' +
+                            'Question <span id="rename-question-num">' + (i+1-1) + '</span> / ' + (questions.length-1) + ' ' +
+                            '<button id="rename-yes-all" class="btn">Yes to Rest</button> ' +
+                            '<button id="rename-no-all" class="btn">No to Rest</button> ' +
+                          '</div>', 
+                          false, false) // false=dont auto-close, false=dont animate
+                    $(confirmBar).on("close", clearHighlighting);
+                }
+                $("#rename-question-num").text(""+i);
                 var token = questions[i][0]
                 editor.setSelection(convertPos(token.start), convertPos(token.start), true) // true=center viewport on selection
                 setHighlighting(questions[i])
-                var confirmBar = new ModalBar('Rename this token? ' +
-                                              '<button id="rename-yes" class="btn">Yes</button> ' +
-                                              '<button id="rename-no" class="btn">No</button> ' +
-                                              '<button class="btn">Abort</button>' +
-                                              '<div style="float: right; color:gray">' +
-                                                'Question ' + (i+1-1) + ' / ' + (questions.length-1) + ' ' +
-                                                '<button id="rename-yes-all" class="btn">Yes to Rest</button> ' +
-                                                '<button id="rename-no-all" class="btn">No to Rest</button> ' +
-                                              '</div>', 
-                                              true) // true=auto-close
+                confirmBar.getRoot().off("click")
                 confirmBar.getRoot().on("click", "button", function(e) {
-                    confirmBar.close()
                     switch (e.target.id) {
                         case 'rename-yes':
                             selected[i] = true
@@ -112,21 +125,27 @@ define(function (require, exports, module) {
                             finishRenaming();
                             break;
                         default:
-                            cancelRenaming();
+                            clearUI();
                             break;
                     }
                 })
-                $(confirmBar).on("closeBlur", cancelRenaming);
-                $(confirmBar).on("closeCancel", cancelRenaming);
             }
         }
         
-        function cancelRenaming() {
+        function clearUI() {
             clearHighlighting();
+            if (nameBar) {
+                nameBar.close(false, false)
+                nameBar = null
+            }
+            if (confirmBar) {
+                confirmBar.close(false, false)
+                confirmBar = null
+            }
         }
         
         function finishRenaming() {
-            clearHighlighting();
+            clearUI();
             // After renaming, zoom back to original position. We need to keep track of the exact
             // column offset in case it changes due to renaming
             var zoomCol = initialRange.start.column;
@@ -169,7 +188,8 @@ define(function (require, exports, module) {
     
     var keys = [
         {key: "Ctrl-R", platform:"mac"}, // don't translate to Cmd-R on mac
-        {key: "Ctrl-R", platform:"win"}
+        {key: "Ctrl-R", platform:"win"},
+        {key: "Ctrl-R", platform:"linux"}
     ];
     
     editMenu.addMenuItem("javascript.renameIdentifier", keys, Menus.LAST_IN_SECTION, Menus.MenuSection.EDIT_REPLACE_COMMANDS);
