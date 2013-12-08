@@ -17,7 +17,7 @@ Working prototype.
 
 # Change Log
 
-#### 0.2.2 October 17, 2013
+#### 0.2.3 October 17, 2013
 - Fix for new version of Brackets (Sprint 32). The API for ModalBar had changed and was not backward compatible.
 
 #### 0.2.1 July 7, 2013

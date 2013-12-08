@@ -3,5 +3,5 @@
     "title": "Rename JavaScript Identifier",
     "author": "Asger Feldthaus <asf@cs.au.dk>",
     "description": "Lets you rename any JavaScript identifier. Place the cursor on an identifier and press Ctrl-R.",
-    "version": "0.2.2"
+    "version": "0.2.3"
 }
