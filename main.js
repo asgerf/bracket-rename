@@ -74,9 +74,17 @@ define(function (require, exports, module) {
             askQuestion(1)
         }
         
-        // sprint 32
+        // sprint 35
+        nameBar.getRoot().keydown(function (ev) {
+            if (ev.keyCode === 13) {
+                nameBar.close()
+                handleCommit()
+            }
+        })
+        
+        // sprint 32-34
         $(nameBar).on("commit", handleCommit)
-        $(nameBar).on("close", clearHighlighting)
+        $(nameBar).on("close", clearHighlighting) // (also sprint 35)
         
         // before sprint 32
         $(nameBar).on("closeOk", handleCommit)
@@ -99,6 +107,7 @@ define(function (require, exports, module) {
                           '</div>', 
                           false, false) // false=dont auto-close, false=dont animate
                     $(confirmBar).on("close", clearHighlighting);
+                    $("button", confirmBar.getRoot()).first().focus();
                 }
                 $("#rename-question-num").text(""+i);
                 var token = questions[i][0]
