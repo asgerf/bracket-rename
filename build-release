@@ -1,0 +1,13 @@
+rm -rf release
+mkdir -p release
+cp LICENSE release/
+cp README.md release/
+cp main.js release/
+cp package.json release/
+cp -r light-refactor.js release/
+rm -rf release/light-refactor.js/{.git,tests,tools}
+rm -f bracket-rename.zip
+pushd release >/dev/null
+zip ../bracket-rename.zip -r *
+popd >/dev/null
+
