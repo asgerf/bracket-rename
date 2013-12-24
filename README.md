@@ -17,6 +17,9 @@ Working prototype.
 
 # Change Log
 
+#### 0.2.5 December 24, 2013
+- Fixed handling of [arrays with omitted elements](https://github.com/asgerf/light-refactor.js/pull/2).
+
 #### 0.2.4 December 8, 2013
 - Compatibility with API changes to ModalBar in Sprint 35.
 
