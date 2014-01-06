@@ -1,4 +1,4 @@
-# LightRefactor for Brackets
+# Bracket-Rename
 
 Rename JavaScript Identifier for [Brackets](http://brackets.io/).
 
