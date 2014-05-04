@@ -193,7 +193,9 @@ define(function (require, exports, module) {
         
     });
     
-    var editMenu = Menus.getMenu(Menus.AppMenuBar.EDIT_MENU);
+    // Use Find menu if present (Sprint 39+), otherwise use Edit menu.
+    var menuLocation = Menus.AppMenuBar.FIND_MENU || Menus.AppMenuBar.EDIT_MENU;
+    var menuItemLocation = Menus.MenuSection.FIND_REPLACE_COMMANDS || Menus.MenuSection.EDIT_REPLACE_COMMANDS;
     
     var keys = [
         {key: "Ctrl-R", platform:"mac"}, // don't translate to Cmd-R on mac
@@ -201,5 +203,5 @@ define(function (require, exports, module) {
         {key: "Ctrl-R", platform:"linux"}
     ];
     
-    editMenu.addMenuItem("javascript.renameIdentifier", keys, Menus.LAST_IN_SECTION, Menus.MenuSection.EDIT_REPLACE_COMMANDS);
+    Menus.getMenu(menuLocation).addMenuItem("javascript.renameIdentifier", keys, Menus.LAST_IN_SECTION, menuItemLocation);
 });

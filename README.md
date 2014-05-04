@@ -17,6 +17,9 @@ Working prototype.
 
 # Change Log
 
+#### 0.2.6 May 4, 2014
+- Command moved to the new Find menu in Sprint 39.
+
 #### 0.2.5 December 24, 2013
 - Fixed handling of [arrays with omitted elements](https://github.com/asgerf/light-refactor.js/pull/2).
 
