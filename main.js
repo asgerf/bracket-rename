@@ -11,6 +11,8 @@ define(function (require, exports, module) {
     
     var ModalBar = brackets.getModule('widgets/ModalBar').ModalBar;
     
+    var lastFailedAttemptKey = ''; // A hash to determine if this is a repeated CTRL-R, and should jump to syntax error.
+    
     function convertPos(pos) {
         return {line: pos.line, ch: pos.column}
     }
@@ -28,10 +30,32 @@ define(function (require, exports, module) {
         var isHtml = FileUtils.isStaticHtmlFileExt(filename)
         
         var jsb = new JavaScriptBuffer;
-        jsb.add("main", text, {type: isHtml ? "html" : "js"})
+        try {
+            jsb.add("main", text, {type: isHtml ? "html" : "js"})
+        } catch (e) {
+            var msg;
+            if (e.lineNumber) {
+                var failedAttemptKey = e.toString() + '~' + filename + '~' + pos
+                if (failedAttemptKey === lastFailedAttemptKey) {
+                    editor.setCursorPos(e.lineNumber-1, e.column, true);
+                    msg = e.description;
+                } else {
+                    lastFailedAttemptKey = failedAttemptKey;
+                    msg = 'syntax error (CTRL-R again to jump)';
+                }
+            } else {
+                msg = e.toString()
+            }
+            editor.displayErrorMessageAtCursor('JS Rename: ' + msg)
+            return;
+        }
+        lastFailedAttemptKey = '';
+        
         var questions = jsb.renameTokenAt("main", pos) // TODO: run in background?
-        if (!questions)
+        if (!questions) {
+            editor.displayErrorMessageAtCursor('JS Rename: place cursor in a name')
             return
+        }
         
         var initialRange = questions[0][0];
         var oldName = text.substring(initialRange.start.offset, initialRange.end.offset)
@@ -77,6 +101,7 @@ define(function (require, exports, module) {
         // sprint 35
         nameBar.getRoot().keydown(function (ev) {
             if (ev.keyCode === 13) {
+                ev.preventDefault()
                 nameBar.close()
                 handleCommit()
             }
