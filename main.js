@@ -98,7 +98,6 @@ define(function (require, exports, module) {
             askQuestion(1)
         }
         
-        // sprint 35
         nameBar.getRoot().keydown(function (ev) {
             if (ev.keyCode === 13) {
                 ev.preventDefault()
@@ -106,14 +105,7 @@ define(function (require, exports, module) {
                 handleCommit()
             }
         })
-        
-        // sprint 32-34
-        $(nameBar).on("commit", handleCommit)
-        $(nameBar).on("close", clearHighlighting) // (also sprint 35)
-        
-        // before sprint 32
-        $(nameBar).on("closeOk", handleCommit)
-        $(nameBar).on("closeBlur", clearHighlighting)
+        $(nameBar).on("close", clearHighlighting)
         
         function askQuestion(i) {
             if (i === questions.length) {
