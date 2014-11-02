@@ -85,7 +85,7 @@ define(function (require, exports, module) {
         // Highlight token related to the selected token while asking for the new name
         setHighlighting(questions[0])
         // ModalBar args: html, autoclose, animate
-        var nameBar = new ModalBar('New name: <input type="text" style="width: 10em" value="'+oldName+'"/>', true, false); 
+        var nameBar = new ModalBar('New name: <input type="text" style="width: 14em" value="'+oldName+'"/>', true, false); 
         
         var selected = {0:true} // indices of selected renamings (auto-answer first question)
         
