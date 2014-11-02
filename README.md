@@ -18,6 +18,7 @@ Place the cursor on a JavaScript identifier and press *Ctrl-R* to rename it.
 **0.2.7 Nov 2, 2014**
 
 - Editor will now respond with a mini-popup error if the source contains a syntax error. Previously it would silently fail.
+- Fixed a bug in property renaming that would cause the first group of tokens to automatically be selected.
 
 **0.2.6 May 4, 2014**
 
