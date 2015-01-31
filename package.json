@@ -3,7 +3,7 @@
     "title": "Rename JavaScript Identifier",
     "author": "Asger Feldthaus <asf@cs.au.dk>",
     "description": "Rename any JavaScript identifier. Place the cursor on an identifier and press Ctrl-R.",
-    "version": "0.2.7",
+    "version": "0.2.8",
     "homepage": "https://github.com/asgerf/bracket-rename",
     "engines": {
         "brackets": ">=0.35.0"

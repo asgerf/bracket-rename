@@ -14,6 +14,10 @@ Place the cursor on a JavaScript identifier and press *Ctrl-R* to rename it.
 
 # Change Log
 
+**0.2.8 Jan 31, 2015**
+
+- Updated parser to Esprima 2.0.
+- Support for some ES6 features such as arrow functions.
 
 **0.2.7 Nov 2, 2014**
 
