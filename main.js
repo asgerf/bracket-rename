@@ -5,7 +5,7 @@ define(function (require, exports, module) {
     var CommandManager  = brackets.getModule("command/CommandManager"),
         Menus           = brackets.getModule("command/Menus"),
         EditorManager   = brackets.getModule("editor/EditorManager"),
-        FileUtils       = brackets.getModule("file/FileUtils");
+        LiveDevelopmentUtils = brackets.getModule("LiveDevelopment/LiveDevelopmentUtils");
     
     var JavaScriptBuffer = require('./light-refactor.js/type-inference');
     
@@ -27,7 +27,7 @@ define(function (require, exports, module) {
         var pos = editor.indexFromPos(editor.getCursorPos())
         
         var filename = editor.document.file ? editor.document.file.name : "";
-        var isHtml = FileUtils.isStaticHtmlFileExt(filename)
+        var isHtml = LiveDevelopmentUtils.isStaticHtmlFileExt(filename)
         
         var jsb = new JavaScriptBuffer;
         try {
@@ -86,6 +86,7 @@ define(function (require, exports, module) {
         setHighlighting(questions[0])
         // ModalBar args: html, autoclose, animate
         var nameBar = new ModalBar('New name: <input type="text" style="width: 14em" value="'+oldName+'"/>', true, false); 
+        $("input[type='text']", nameBar.getRoot()).select();
         
         var selected = {0:true} // indices of selected renamings (auto-answer first question)
         
@@ -99,13 +100,13 @@ define(function (require, exports, module) {
         }
         
         nameBar.getRoot().keydown(function (ev) {
-            if (ev.keyCode === 13) {
+            if (ev.keyCode === 13) { // enter
                 ev.preventDefault()
                 nameBar.close()
                 handleCommit()
             }
         })
-        $(nameBar).on("close", clearHighlighting)
+        nameBar.on("close", clearHighlighting)
         
         function askQuestion(i) {
             if (i === questions.length) {
@@ -123,7 +124,13 @@ define(function (require, exports, module) {
                             '<button id="rename-no-all" class="btn">No to Rest</button> ' +
                           '</div>', 
                           false, false) // false=dont auto-close, false=dont animate
-                    $(confirmBar).on("close", clearHighlighting);
+                    confirmBar.on("close", clearHighlighting);
+                    confirmBar.getRoot().keydown(function (ev) {
+                        if (ev.keyCode === 27) { // escape
+                            ev.preventDefault()
+                            confirmBar.close(false, false);
+                        }
+                    });
                     $("button", confirmBar.getRoot()).first().focus();
                 }
                 $("#rename-question-num").text(""+i);
