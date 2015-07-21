@@ -14,6 +14,14 @@ Place the cursor on a JavaScript identifier and press *Ctrl-R* to rename it.
 
 # Change Log
 
+**0.2.9 Jul 21, 2015**
+
+- Updated parser to Esprima 2.4.1.
+- Intra-file support for ES6 import/export declarations.
+- The name box should once again select all when it appears.
+- You can again bail out of a renaming by pressing escape.
+- Fixed deprecated API usage.
+
 **0.2.8 Jan 31, 2015**
 
 - Updated parser to Esprima 2.0.
